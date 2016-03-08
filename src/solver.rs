@@ -3,27 +3,68 @@ use ::rand::distributions::{Range, IndependentSample};
 
 use ::problem::Problem;
 
+/**
+ * A solver will take a problem and use simulated annealing
+ * to try and find an optimal state.
+ */
 #[derive(Debug, Clone)]
 pub struct Solver {
+    /**
+     * The maximum number of iterations to run the algorithm
+     * for.
+     */
     pub iterations: u64,
+
+    /**
+     * The initial temperature of the process.
+     */
     pub initial_temperature: f64,
+
+    /**
+     * The factor to multiply the temperature by each time it
+     * is lowered - this should be a number between 0.0 and 1.0.
+     */
     pub temperature_reduction: f64,
+
+    /**
+     * The maximimum number of attempts to find a new state
+     * before lowering the temperature.
+     */
     pub max_attempts: u64,
+
+    /**
+     * The maximum number of accepted new states before lowering
+     * the temperature.
+     */
     pub max_accepts: u64,
+
+    /**
+     * The maximum number of rejected states before terminating the
+     * process.
+     */
     pub max_rejects: u64,
 }
 
 impl Solver {
+    /**
+     * Construct the new default solver.
+     */
     pub fn new() -> Solver {
         Default::default()
     }
 
+    /** 
+     * Construct a new solver with a given builder function.
+     */
     pub fn build_new<F>(builder: F) -> Solver where F: FnOnce(&mut Solver) {
         let mut solver = Solver::new();
         builder(&mut solver);
         solver
     }
 
+    /**
+     * Run the solver on the given problem with the given initial state.
+     */
     pub fn solve<P>(&self, problem: &P, initial: P::State) -> P::State where P: Problem {
         let mut rng = thread_rng();
         let range = Range::new(0.0, 1.0);
