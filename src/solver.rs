@@ -81,20 +81,20 @@ impl Solver {
     }
 
     /**
-     * Run the solver on the given problem with the given initial state.
+     * Run the solver on the given problem.
      */
-    pub fn solve<P>(&self, problem: &P, initial: P::State) -> P::State where P: Problem {
+    pub fn solve<P>(&self, problem: &P) -> P::State where P: Problem {
         let mut rng = thread_rng();
         let range = Range::new(0.0, 1.0);
 
-        let mut energy = problem.energy(&initial);
+        let mut state = problem.initial_state();
+        let mut energy = problem.energy(&state);
         let mut temperature = self.initial_temperature;
 
         let mut attempted = 0;
         let mut accepted = 0;
         let mut rejected = 0;
 
-        let mut state = initial;
 
         for _ in 0 .. self.iterations {
             state = {

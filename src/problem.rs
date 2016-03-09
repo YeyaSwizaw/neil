@@ -25,6 +25,11 @@ pub trait Problem {
     type State;
 
     /**
+     * This function should generate an initial state for the problem.
+     */
+    fn initial_state(&self) -> Self::State;
+
+    /**
      * This function should calculate the energy of a given state,
      * as a number between 0.0 and 1.0.
      *
