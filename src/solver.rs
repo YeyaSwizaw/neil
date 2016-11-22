@@ -104,8 +104,9 @@ impl Solver {
                 attempted += 1;
 
                 let de = new_energy - energy;
-
-                if de < 0.0 || range.ind_sample(&mut rng) <= -de / temperature {
+                
+                //TODO Give the alternative to decide between Maximization and Minimization Problems
+                if de < 0.0 || range.ind_sample(&mut rng) <= (-de / temperature).exp() {
                     accepted += 1;
                     energy = new_energy;
 
